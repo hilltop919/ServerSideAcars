@@ -19,11 +19,17 @@ public class AircraftManager {
 
 	public static void removeId(int id) {
 		aircraftReg.remove(id);
+		aircraftLife.remove(id);
+		aircraftFuel.remove(id);
 	}
 
 	public static void removeId(String reg) {
 		for (int i = 0; i < aircraftReg.size(); i++)
-			if (aircraftReg.get(i) == reg) aircraftReg.remove(i);
+			if (aircraftReg.get(i) == reg) {
+				aircraftReg.remove(i);
+				aircraftLife.remove(i);
+				aircraftFuel.remove(i);
+			}
 	}
 
 	public static int getId(String reg) {
@@ -34,6 +40,14 @@ public class AircraftManager {
 
 	public static String getReg(int id) {
 		return aircraftReg.get(id);
+	}
+
+	public static int getLife(int id) {
+		return aircraftLife.get(id);
+	}
+
+	public static int getFuel(int id) {
+		return aircraftFuel.get(id);
 	}
 
 	public static String getAllPlanes(int id) {
