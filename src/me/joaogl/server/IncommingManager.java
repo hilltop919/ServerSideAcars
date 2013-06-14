@@ -16,13 +16,15 @@ public class IncommingManager {
 			if (stage == 1) {
 				if (check(in)) return cancel();
 				else {
-					
-					stage = 2;
-					return "Thank you, fuel available is XXX and aircraft life is XXX.";
+					String[] args = in.split(" ");
+					if (args[1] != null) {
+						stage = 2;
+						return "Thank you, fuel available is XXX and aircraft life is XXX.";
+					} else return "Type list to get all Planes registrations";
 				}
 			}
 			if (stage == 2) if (check(in)) return cancel();
-			if (in.equalsIgnoreCase("Disconnecting")) return "disc";
+			if (in.equalsIgnoreCase("Disconnecting")) return "Disconnected. Thank you for flying with us, see you soon.";
 			if (in == "new") return "Connected, Welcome.";
 			if (in.equalsIgnoreCase("list")) {
 				String result = "Aircraft List sent to the server console.";
@@ -38,8 +40,8 @@ public class IncommingManager {
 					if (id <= AircraftManager.getTotal()) {
 						AircraftManager.removeId(id);
 						return "Removed id " + args[1];
-					} else return "Error: invalid ID. Type /list";
-				} else return "Error: value typed is not an ID. Type /delid (id)";
+					} else return "Error: invalid ID. Type list";
+				} else return "Error: value typed is not an ID. Type delid (id)";
 			}
 			if (in.equalsIgnoreCase("restart")) {
 				DataManager.setupRegList();

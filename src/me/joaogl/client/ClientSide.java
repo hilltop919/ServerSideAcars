@@ -37,7 +37,7 @@ public class ClientSide {
 
         while ((fromServer = in.readLine()) != null) {
             System.out.println("Server: " + fromServer);
-            if (fromServer.equals("disc"))
+            if (fromServer.equals("Disconnected. Thank you for flying with us, see you soon."))
                 break;
 		    
             fromUser = stdIn.readLine();

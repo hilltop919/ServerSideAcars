@@ -28,7 +28,7 @@ public class ServerThread extends Thread {
 			while ((inputLine = in.readLine()) != null) {
 				outputLine = manager.processInput(inputLine);
 				out.println(outputLine);
-				if (outputLine.equals("disc")) break;
+				if (outputLine.equals("Disconnected. Thank you for flying with us, see you soon.")) break;
 			}
 			out.close();
 			in.close();
