@@ -16,6 +16,7 @@ public class IncommingManager {
 			if (stage == 1) {
 				if (check(in)) return cancel();
 				else {
+					
 					stage = 2;
 					return "Thank you, fuel available is XXX and aircraft life is XXX.";
 				}
