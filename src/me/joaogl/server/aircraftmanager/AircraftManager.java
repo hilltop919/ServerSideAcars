@@ -9,6 +9,7 @@ public class AircraftManager {
 	public static ArrayList<String> aircraftReg = new ArrayList<String>();
 	public static ArrayList<Integer> aircraftLife = new ArrayList<Integer>();
 	public static ArrayList<Integer> aircraftFuel = new ArrayList<Integer>();
+	private static int deleted = 0;
 
 	public static void setId(int id, String reg, int life, int fuel) {
 		System.out.println("  - Setting plane " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
@@ -18,9 +19,19 @@ public class AircraftManager {
 	}
 
 	public static void removeId(int id) {
+		System.out.println("Removing id " + id);
 		aircraftReg.remove(id);
 		aircraftLife.remove(id);
 		aircraftFuel.remove(id);
+		deleted++;
+	}
+
+	public static void removeAll() {
+		System.out.println("Removing all Planes data.");
+		aircraftReg.removeAll(aircraftReg);
+		aircraftFuel.removeAll(aircraftFuel);
+		aircraftLife.removeAll(aircraftLife);
+		deleted = 0;
 	}
 
 	public static void removeId(String reg) {
@@ -29,7 +40,12 @@ public class AircraftManager {
 				aircraftReg.remove(i);
 				aircraftLife.remove(i);
 				aircraftFuel.remove(i);
+				deleted++;
 			}
+	}
+
+	public static int getTotal() {
+		return (aircraftReg.size() - deleted);
 	}
 
 	public static int getId(String reg) {

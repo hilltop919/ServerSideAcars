@@ -29,6 +29,20 @@ public class IncommingManager {
 				}
 				return result;
 			}
+			if (in.contains("delid")) {
+				String[] args = in.split(" ");
+				if (args[1] != null && isInt(args[1])) {
+					int id = Integer.parseInt(args[1]);
+					if (id <= AircraftManager.getTotal()) {
+						AircraftManager.removeId(id);
+						return "Removed id " + args[1];
+					} else return "Error: invalid ID. Type /list";
+				} else return "Error: value typed is not an ID. Type /delid (id)";
+			}
+			if (in.equalsIgnoreCase("restart")) {
+				DataManager.setupRegList();
+				return "Restart";
+			}
 		}
 		return out;
 	}
@@ -41,6 +55,15 @@ public class IncommingManager {
 	private String cancel() {
 		stage = 0;
 		return "Flight cancelled.";
+	}
+
+	private boolean isInt(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 
 }
