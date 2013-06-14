@@ -24,7 +24,7 @@ public class IncommingManager {
 			if (in == "new") return "Connected, Welcome.";
 			if (in.equalsIgnoreCase("list")) {
 				String result = "Aircraft List sent to the server console.";
-				for (int i = 0; i < AircraftManager.aircraftReg.length; i++) {
+				for (int i = 0; i < AircraftManager.aircraftReg.size(); i++) {
 					System.out.println(AircraftManager.getAllPlanes(i));
 				}
 				return result;

@@ -13,7 +13,7 @@ public class DataManager {
 		System.out.println(" - Creating aircraft ammount.");	
 		AircraftManager manager = new AircraftManager();	
 		System.out.println(" - Setting up the aircraft list.");
-		for (int i = 0; i < AircraftManager.aircraftReg.length; i++) {
+		for (int i = 0; i < DataManager.getTotalAircraft(); i++) {
 			//SQL DATA INTO THE ARRAY
 			//SQL DATA OF LIFE INTO THE ARRY TOO
 			if (i == 0) AircraftManager.setId(i, "A", 10, 50);
