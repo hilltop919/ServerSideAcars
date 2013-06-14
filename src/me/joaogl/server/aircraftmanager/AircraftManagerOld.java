@@ -44,7 +44,7 @@ public class AircraftManagerOld {
 	public static int getFreeId() {
 		for (int i = 0; i < aircraftReg.length; i++)
 			if (aircraftReg[i] == null) return i;
-		return 101;
+		return DataManager.getErrorvalue();
 	}
 
 	public static String getAllPlanes(int id) {

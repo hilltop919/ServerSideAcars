@@ -6,6 +6,10 @@ public class DataManager {
 
 	public static int getTotalAircraft() {
 		return 4;
+	}	
+	
+	public static int getErrorvalue() {
+		return (getTotalAircraft() + 1);
 	}
 
 	public static void setupRegList() {

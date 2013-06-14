@@ -50,19 +50,22 @@ public class AircraftManager {
 
 	public static int getId(String reg) {
 		for (int i = 0; i < aircraftReg.size(); i++)
-			if (aircraftReg.get(i) == reg) return i;
-		return 0;
+			if (aircraftReg.get(i).equalsIgnoreCase(reg)) return i;
+		return DataManager.getErrorvalue();
 	}
 
 	public static String getReg(int id) {
+		if (id > getTotal()) return null;
 		return aircraftReg.get(id);
 	}
 
 	public static int getLife(int id) {
+		if (id > getTotal()) return DataManager.getErrorvalue();
 		return aircraftLife.get(id);
 	}
 
 	public static int getFuel(int id) {
+		if (id > getTotal()) return DataManager.getErrorvalue();
 		return aircraftFuel.get(id);
 	}
 

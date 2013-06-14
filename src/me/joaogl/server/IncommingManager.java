@@ -16,11 +16,21 @@ public class IncommingManager {
 			if (stage == 1) {
 				if (check(in)) return cancel();
 				else {
-					String[] args = in.split(" ");
-					if (args[1] != null) {
-						stage = 2;
-						return "Thank you, fuel available is XXX and aircraft life is XXX.";
-					} else return "Type list to get all Planes registrations";
+					if (in != null) {
+						if (isInt(in)) {
+							if (AircraftManager.getReg(Integer.parseInt(in)) != null) {
+								int id = AircraftManager.getId(AircraftManager.getReg(Integer.parseInt(in)));
+								stage = 2;
+								return "Thank you, aircraft requested is " + AircraftManager.getReg(id) + " registred with the id " + id + " which fuel available is " + AircraftManager.getFuel(id) + " and aircraft life is " + AircraftManager.getLife(id) + ".";
+							} else return "Type list to get all Planes registrations";
+						} else {
+							if (AircraftManager.getId(in) != DataManager.getErrorvalue()) {
+								int id = AircraftManager.getId(in);
+								stage = 2;
+								return "Thank you, aircraft requested is " + AircraftManager.getReg(id) + " registred with the id " + id + " which fuel available is " + AircraftManager.getFuel(id) + " and aircraft life is " + AircraftManager.getLife(id) + ".";
+							} else return "Type list to get all Planes registrations, " + AircraftManager.getId(in);
+						}
+					} else return "Type list to get all Planes registrations.";
 				}
 			}
 			if (stage == 2) if (check(in)) return cancel();
@@ -52,7 +62,7 @@ public class IncommingManager {
 	}
 
 	private boolean check(String in) {
-		if (in.equalsIgnoreCase("abort") || in.equalsIgnoreCase("cancel") || in.equalsIgnoreCase("end") || in.equalsIgnoreCase("finish") || in.equalsIgnoreCase("stop")) { return true; }
+		if (in.equalsIgnoreCase("abort") || in.equalsIgnoreCase("cancel") || in.equalsIgnoreCase("end") || in.equalsIgnoreCase("finish") || in.equalsIgnoreCase("stop") || in.equalsIgnoreCase("close")) { return true; }
 		return false;
 	}
 
