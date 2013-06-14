@@ -6,12 +6,13 @@ public class IncommingManager {
 	int stage = 0;
 
 	public String processInput(String in) {
-		String out = "Unknown command - " + in;
+		String out = "Empty command";
 		if (in != null) {
+			out = "Unknown command - " + in;
 			if (in.equalsIgnoreCase("start") && stage == 0) {
 				stage = 1;
 				return "Starting a new flight, tell me the aircraft registration.";
-			} else if (in.equalsIgnoreCase("start")) { return "You've already started a flight."; }
+			} else if (in.equalsIgnoreCase("start")) return "You've already started a flight.";
 			if (stage == 1) {
 				if (check(in)) return cancel();
 				else {
