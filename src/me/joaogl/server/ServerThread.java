@@ -21,12 +21,16 @@ public class ServerThread extends Thread {
 
 			String inputLine, outputLine;
 			IncommingManager manager = new IncommingManager();
-			outputLine = manager.processInput("new");
+			outputLine = "Connected, welcome.";
 			out.println(outputLine);
+			System.out.println("Client " + socket.getInetAddress() + " connected.");
 			while ((inputLine = in.readLine()) != null) {
 				outputLine = manager.processInput(inputLine);
 				out.println(outputLine);
-				if (outputLine.equals("Disconnected. Thank you for flying with us, see you soon.")) break;
+				if (outputLine.equals("disc")) {
+					System.out.println("Client " + socket.getInetAddress() + " disconnected.");
+					break;
+				}
 			}
 			out.close();
 			in.close();
@@ -37,7 +41,7 @@ public class ServerThread extends Thread {
 	}
 
 	private void Exception(IOException e) {
-		if (e.toString().contains("Connection reset")) System.out.println("Connection Reset: " + socket.getInetAddress() + " - Client disconnected");
+		if (e.toString().contains("Connection reset")) System.out.println("Client " + socket.getInetAddress() + " lost connection.");
 		else e.printStackTrace();
 	}
 }

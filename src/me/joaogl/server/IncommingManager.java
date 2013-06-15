@@ -34,8 +34,7 @@ public class IncommingManager {
 				}
 			}
 			if (stage == 2) if (check(in)) return cancel();
-			if (in.equalsIgnoreCase("Disconnecting")) return "Disconnected. Thank you for flying with us, see you soon.";
-			if (in == "new") return "Connected, Welcome.";
+			if (in.equalsIgnoreCase("Disconnecting") || in.equalsIgnoreCase("disc")) return "disc";
 			if (in.equalsIgnoreCase("list")) {
 				String result = "Aircraft List sent to the server console.";
 				for (int i = 0; i < AircraftManager.aircraftReg.size(); i++) {
@@ -44,13 +43,15 @@ public class IncommingManager {
 				return result;
 			}
 			if (in.contains("delid")) {
-				String[] args = in.split(" ");
-				if (args[1] != null && isInt(args[1])) {
-					int id = Integer.parseInt(args[1]);
-					if (id <= AircraftManager.getTotal()) {
-						AircraftManager.removeId(id);
-						return "Removed id " + args[1];
-					} else return "Error: invalid ID. Type list";
+				if (in.contains(" ")) {
+					String[] args = in.split(" ");
+					if (args[1] != null && isInt(args[1])) {
+						int id = Integer.parseInt(args[1]);
+						if (id <= AircraftManager.getTotal()) {
+							AircraftManager.removeId(id);
+							return "Removed id " + args[1];
+						} else return "Error: invalid ID. Type list";
+					} else return "Error: value typed is not an ID. Type delid (id)";
 				} else return "Error: value typed is not an ID. Type delid (id)";
 			}
 			if (in.equalsIgnoreCase("restart")) {
