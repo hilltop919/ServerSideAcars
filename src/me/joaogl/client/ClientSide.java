@@ -5,55 +5,57 @@ import java.net.*;
 
 public class ClientSide {
 
-	private static boolean running = false;
 	private static Socket Socket = null;
 	private static PrintWriter out = null;
 	private static BufferedReader in = null;
-	private static BufferedReader fromUser = null;
+	private static BufferedReader stdIn = null;
 
 	public static void main(String[] args) throws IOException {
 
 		System.out.println("Connecting to the Aircaft Management Server...");
 
-		System.out.println("10%");
-
 		try {
-			System.out.println("15%");
+			System.out.println("Opening sockets.");
 			Socket = new Socket("localhost", 24467);
 			out = new PrintWriter(Socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-			System.out.println("50%");
+			stdIn = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Sockets open.");
 		} catch (UnknownHostException e) {
-			System.err.println("Server not available.");
-			System.exit(1);
+			forceClose();
 		} catch (IOException e) {
-			System.err.println("Server not available.");
-			System.exit(1);
+			forceClose();
 		}
 
-		System.out.println("55%");
-		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-		String fromServer;
-		String fromUser;
-		System.out.println("90%");
-		System.out.println("100%  Done");
+		String fromServer, fromUser;
 
 		while ((fromServer = in.readLine()) != null) {
 			if (!fromServer.equalsIgnoreCase("disc")) System.out.println("Server: " + fromServer);
-			if (fromServer.equals("disc")) {
+			else {
 				System.out.println("Disconnected. Thank you for flying with us, see you soon.");
 				break;
 			}
 
 			fromUser = stdIn.readLine();
-			if (fromUser != null) {
-				out.println(fromUser);
-			}
+			if (fromUser != null) out.println(fromUser);
 		}
 
-		out.close();
-		in.close();
-		stdIn.close();
-		Socket.close();
+		closeSockets();
+	}
+
+	private static void forceClose() {
+		System.err.println("Server not available.");
+		System.exit(1);
+	}
+
+	private static void closeSockets() {
+		try {
+			Socket.close();
+			out.close();
+			in.close();
+			stdIn.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
