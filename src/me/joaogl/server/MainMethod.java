@@ -3,6 +3,8 @@ package me.joaogl.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import me.joaogl.server.aircraftmanager.DataManager;
+
 public class MainMethod {
 
 	public static void main(String[] args) throws IOException {

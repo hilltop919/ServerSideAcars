@@ -2,7 +2,6 @@ package me.joaogl.server.aircraftmanager;
 
 import java.util.ArrayList;
 
-import me.joaogl.server.DataManager;
 
 public class AircraftManager {
 

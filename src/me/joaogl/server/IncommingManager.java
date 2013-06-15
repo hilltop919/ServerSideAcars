@@ -1,6 +1,7 @@
 package me.joaogl.server;
 
 import me.joaogl.server.aircraftmanager.AircraftManager;
+import me.joaogl.server.aircraftmanager.DataManager;
 
 public class IncommingManager {
 	int stage = 0;

@@ -10,6 +10,7 @@ public class ServerThread extends Thread {
 	private Socket socket = null;
 	private PrintWriter socketToUser;
 	private BufferedReader socketFromUser;
+	private String pilotId;
 
 	public ServerThread(Socket socket) {
 		super("ServerThread");
@@ -25,7 +26,16 @@ public class ServerThread extends Thread {
 
 			String outputLine, inputLine;
 
-			socketToUser.println("Connected, welcome.");
+			while ((inputLine = socketFromUser.readLine()) != null) {
+				if (inputLine.contains("newcom ")) {
+					String[] name = inputLine.split(" ");
+					if (name.length > 1 && name[1] != null) {
+						pilotId = name[1];
+						break;
+					}
+				}
+			}
+			socketToUser.println("Connected, welcome " + pilotId + ".");
 			System.out.println("Client " + socket.getInetAddress() + " connected.");
 
 			while ((inputLine = socketFromUser.readLine()) != null) {
