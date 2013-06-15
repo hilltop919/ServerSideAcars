@@ -16,24 +16,27 @@ public class ServerThread extends Thread {
 
 	public void run() {
 		try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-			String inputLine, outputLine;
 			IncommingManager manager = new IncommingManager();
-			outputLine = "Connected, welcome.";
-			out.println(outputLine);
+
+			PrintWriter socketToUser = new PrintWriter(socket.getOutputStream(), true);
+			BufferedReader socketFromUser = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+			String outputLine, inputLine;
+
+			socketToUser.println("Connected, welcome.");
 			System.out.println("Client " + socket.getInetAddress() + " connected.");
-			while ((inputLine = in.readLine()) != null) {
+
+			while ((inputLine = socketFromUser.readLine()) != null) {
 				outputLine = manager.processInput(inputLine);
-				out.println(outputLine);
+				socketToUser.println(outputLine);
+
 				if (outputLine.equals("disc")) {
 					System.out.println("Client " + socket.getInetAddress() + " disconnected.");
 					break;
 				}
 			}
-			out.close();
-			in.close();
+			socketToUser.close();
+			socketFromUser.close();
 			socket.close();
 		} catch (IOException e) {
 			Exception(e);
@@ -43,5 +46,9 @@ public class ServerThread extends Thread {
 	private void Exception(IOException e) {
 		if (e.toString().contains("Connection reset")) System.out.println("Client " + socket.getInetAddress() + " lost connection.");
 		else e.printStackTrace();
+	}
+
+	private void disconnect() {
+
 	}
 }

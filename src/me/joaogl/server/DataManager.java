@@ -13,7 +13,7 @@ public class DataManager {
 	}
 
 	public static void setupRegList() {
-		System.out.println(" - Setting up the aircraft list.");
+		System.out.println("Setting up the aircraft list.");
 		AircraftManager.removeAll();
 		for (int i = 0; i < DataManager.getTotalAircraft(); i++) {
 			// SQL DATA INTO THE ARRAY

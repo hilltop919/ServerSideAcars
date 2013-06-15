@@ -12,7 +12,7 @@ public class AircraftManager {
 	private static int deleted = 0;
 
 	public static void setId(int id, String reg, int life, int fuel) {
-		System.out.println("  - Setting plane " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
+		System.out.println(" - Setting plane " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
 		aircraftReg.add(reg);
 		aircraftLife.add(life);
 		aircraftFuel.add(fuel);

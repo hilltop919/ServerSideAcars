@@ -14,13 +14,9 @@ public class MainMethod {
 			serverSocket = new ServerSocket(24467);
 			System.out.println(" - Server started on port 24467.");
 			// Setup planes
-			System.out.println("Setting up the data planes.");
 			DataManager.setupRegList();
 		} catch (IOException e) {
-			System.err.println("Error:");
-			System.err.println("Could not listen on port: 24467.");
-			System.err.println("Please check the port.");
-			System.err.println("Server Closing.");
+			System.out.println("Error: Could not listen on port 24467. \nPlease check the port. \nServer Closing.");
 			System.exit(-1);
 		}
 
