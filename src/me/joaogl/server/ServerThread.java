@@ -1,71 +1,58 @@
 package me.joaogl.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.*;
+import java.io.*;
 
 public class ServerThread extends Thread {
+	private Server server = null;
 	private Socket socket = null;
-	private PrintWriter socketToUser;
-	private BufferedReader socketFromUser;
-	private String pilotId;
+	private int ID = -1;
+	private DataInputStream streamIn = null;
+	private DataOutputStream streamOut = null;
 
-	public ServerThread(Socket socket) {
-		super("ServerThread");
-		this.socket = socket;
+	public ServerThread(Server _server, Socket _socket) {
+		super();
+		server = _server;
+		socket = _socket;
+		ID = socket.getPort();
+	}
+
+	public void send(String msg) {
+		try {
+			streamOut.writeUTF(msg);
+			streamOut.flush();
+		} catch (IOException ioe) {
+			System.out.println(ID + " ERROR sending: " + ioe.getMessage());
+			server.remove(ID);
+			stop();
+		}
+	}
+
+	public int getID() {
+		return ID;
 	}
 
 	public void run() {
-		try {
-			IncommingManager manager = new IncommingManager();
-
-			socketToUser = new PrintWriter(socket.getOutputStream(), true);
-			socketFromUser = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-			String outputLine, inputLine;
-
-			while ((inputLine = socketFromUser.readLine()) != null) {
-				if (inputLine.contains("newcom ")) {
-					String[] name = inputLine.split(" ");
-					if (name.length > 1 && name[1] != null) {
-						pilotId = name[1];
-						break;
-					}
-				}
+		System.out.println("Server Thread " + ID + " running.");
+		while (true) {
+			try {
+				server.handle(ID, streamIn.readUTF());
+			} catch (IOException ioe) {
+				System.out.println(ID + " ERROR reading: " + ioe.getMessage());
+				server.remove(ID);
+				stop();
 			}
-			socketToUser.println("Connected, welcome " + pilotId + ".");
-			System.out.println("Client " + socket.getInetAddress() + " connected.");
-
-			while ((inputLine = socketFromUser.readLine()) != null) {
-				outputLine = manager.processInput(inputLine);
-				socketToUser.println(outputLine);
-
-				if (outputLine.equals("disc")) {
-					System.out.println("Client " + socket.getInetAddress() + " disconnected.");
-					break;
-				}
-			}
-
-			closeSockets();
-		} catch (IOException e) {
-			Exception(e);
 		}
 	}
 
-	private void Exception(IOException e) {
-		if (e.toString().contains("Connection reset")) System.out.println("Client " + socket.getInetAddress() + " lost connection.");
-		else e.printStackTrace();
+	public void open() throws IOException {
+		streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+		streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 	}
 
-	private void closeSockets() {
-		try {
-			socketToUser.close();
-			socketFromUser.close();
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void close() throws IOException {
+		if (socket != null) socket.close();
+		if (streamIn != null) streamIn.close();
+		if (streamOut != null) streamOut.close();
 	}
 }

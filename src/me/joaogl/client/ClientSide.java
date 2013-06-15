@@ -1,79 +1,99 @@
 package me.joaogl.client;
 
-import java.io.*;
 import java.net.*;
+import java.io.*;
 
-public class ClientSide {
-
-	private static Socket Socket = null;
-	private static PrintWriter out = null;
-	private static BufferedReader in = null;
-	private static BufferedReader stdIn = null;
+public class ClientSide implements Runnable {
+	private Socket socket = null;
+	private Thread thread = null;
+	private DataInputStream console = null;
+	private DataOutputStream streamOut = null;
+	private ClientSideThread client = null;
 	private static boolean running = false;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String args[]) {
 		running = true;
+
 		System.out.println("Type connect (pilot id) - to connect");
 		while (running) {
-			stdIn = new BufferedReader(new InputStreamReader(System.in));
-			String fromUser = stdIn.readLine();
+			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+			String fromUser = null;
+			try {
+				fromUser = stdIn.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			if (fromUser != null && fromUser.contains("connect")) {
 				if (fromUser.contains(" ")) {
 					String[] input = fromUser.split(" ");
 					if (input.length > 1 && input[1] != null) {
-						System.out.println("Connected as " + input[1]);
-						startCom(input[1]);
+						System.out.println("Connecting as " + input[1]);
+						running = false;
+						ClientSide client = new ClientSide(24467, input[1]);
 					} else System.out.println("Type connect (pilot id) - to connect");
 				} else System.out.println("Type connect (pilot id) - to connect");
 			} else System.out.println("You are not connected");
 		}
 	}
 
-	private static void startCom(String input) {
-		System.out.println("Connecting to the Aircaft Management Server...");
-
+	public ClientSide(int serverPort, String name) {
+		System.out.println("Establishing connection. Please wait ...");
 		try {
-			System.out.println("Opening sockets.");
-			Socket = new Socket("localhost", 24467);
-			out = new PrintWriter(Socket.getOutputStream(), true);
-			in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-			stdIn = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Sockets ready.");
+			socket = new Socket("localhost", serverPort);
+			System.out.println("Connected to the Aircraft Management Server - Rio Sul Virtual.");
+			start(name);
+		} catch (UnknownHostException uhe) {
+			System.out.println("Host unknown: " + uhe.getMessage());
+			System.exit(1);
+		} catch (IOException ioe) {
+			System.out.println("Unexpected exception: " + ioe.getMessage());
+			System.exit(1);
+		}
+	}
 
-			String fromServer, fromUser;
-			out.println("newcom " + input);
-
-			while ((fromServer = in.readLine()) != null) {
-				if (!fromServer.equalsIgnoreCase("disc")) System.out.println("Server: " + fromServer);
-				else {
-					System.out.println("Disconnected. Thank you for flying with us, see you soon.");
-					break;
-				}
-
-				fromUser = stdIn.readLine();
-				if (fromUser != null) out.println(fromUser);
+	public void run() {
+		while (thread != null) {
+			try {
+				streamOut.writeUTF(console.readLine());
+				streamOut.flush();
+			} catch (IOException ioe) {
+				System.out.println("Sending error: " + ioe.getMessage());
+				stop();
 			}
-			closeSockets();
-		} catch (UnknownHostException e) {
-			forceClose();
-		} catch (IOException e) {
-			forceClose();
 		}
 	}
 
-	private static void forceClose() {
-		System.err.println("Server not available.");
-		System.exit(1);
+	public void handle(String msg) {
+		if (msg.equals("disc")) {
+			System.out.println("Disconnecting, thank you see you soon.");
+			stop();
+		} else System.out.println(msg);
 	}
 
-	private static void closeSockets() {
+	public void start(String name) throws IOException {
+		console = new DataInputStream(System.in);
+		streamOut = new DataOutputStream(socket.getOutputStream());
+		streamOut.writeUTF("newcom " + name);
+		if (thread == null) {
+			client = new ClientSideThread(this, socket);
+			thread = new Thread(this);
+			thread.start();
+		}
+	}
+
+	public void stop() {
+		if (thread != null) {
+			thread.stop();
+			thread = null;
+		}
 		try {
-			Socket.close();
-			out.close();
-			in.close();
-			stdIn.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			if (console != null) console.close();
+			if (streamOut != null) streamOut.close();
+			if (socket != null) socket.close();
+		} catch (IOException ioe) {
+			System.out.println("Error closing ...");
 		}
+		client.close();
+		client.stop();
 	}
 }

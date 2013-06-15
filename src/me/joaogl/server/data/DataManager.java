@@ -1,4 +1,6 @@
-package me.joaogl.server.aircraftmanager;
+package me.joaogl.server.data;
+
+import me.joaogl.server.aircraftmanager.AircraftManager;
 
 
 public class DataManager {
