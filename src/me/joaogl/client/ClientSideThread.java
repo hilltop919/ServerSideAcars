@@ -37,7 +37,7 @@ public class ClientSideThread extends Thread {
 			try {
 				client.handle(streamIn.readUTF());
 			} catch (IOException ioe) {
-				System.out.println("Listening error: " + ioe.getMessage());
+				System.out.println("Server disconnected. Come back latter.");
 				client.stop();
 			}
 		}

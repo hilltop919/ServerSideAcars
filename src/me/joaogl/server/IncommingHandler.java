@@ -3,7 +3,7 @@ package me.joaogl.server;
 import me.joaogl.server.aircraftmanager.AircraftManager;
 import me.joaogl.server.data.DataManager;
 
-public class IncommingManager {
+public class IncommingHandler {
 	int stage = 0;
 
 	public String processInput(String in) {

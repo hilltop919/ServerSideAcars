@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import me.joaogl.server.data.DataManager;
 
-
 public class AircraftManager {
 
 	public static ArrayList<String> aircraftReg = new ArrayList<String>();
@@ -13,7 +12,7 @@ public class AircraftManager {
 	private static int deleted = 0;
 
 	public static void setId(int id, String reg, int life, int fuel) {
-		System.out.println(" - Setting plane " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
+		System.out.println(" - Setting aircraft " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
 		aircraftReg.add(reg);
 		aircraftLife.add(life);
 		aircraftFuel.add(fuel);
@@ -28,7 +27,7 @@ public class AircraftManager {
 	}
 
 	public static void removeAll() {
-		System.out.println("Removing all Planes data.");
+		System.out.println("Removing all aircraft data.");
 		aircraftReg.removeAll(aircraftReg);
 		aircraftFuel.removeAll(aircraftFuel);
 		aircraftLife.removeAll(aircraftLife);

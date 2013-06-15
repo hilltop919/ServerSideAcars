@@ -1,8 +1,9 @@
-package me.joaogl.server;
+package me.joaogl.server.sockets;
 
 import java.net.*;
 import java.io.*;
 
+import me.joaogl.server.data.DataManager;
 import me.joaogl.server.data.ProgramInfo;
 
 public class Server implements Runnable {
@@ -17,6 +18,7 @@ public class Server implements Runnable {
 			server = new ServerSocket(port);
 			System.out.println("Server started: " + server.getInetAddress());
 			start();
+			DataManager.setupRegList();
 		} catch (IOException ioe) {
 			System.out.println("Can not bind to port " + port + ": " + ioe.getMessage());
 		}
@@ -25,7 +27,6 @@ public class Server implements Runnable {
 	public void run() {
 		while (thread != null) {
 			try {
-				System.out.println("Waiting for a pilot...");
 				addThread(server.accept());
 			} catch (IOException ioe) {
 				System.out.println("Server accept error: " + ioe);
@@ -75,21 +76,25 @@ public class Server implements Runnable {
 			} catch (IOException ioe) {
 				System.out.println("Error closing thread: " + ioe);
 			}
-			toTerminate.stop();
+			try {
+				if (toTerminate.isAlive()) toTerminate.stop();
+			} catch (final ThreadDeath ex) {
+				ex.getStackTrace();
+			}
 		}
 	}
 
 	private void addThread(Socket socket) {
 		if (clientCount < clients.length) {
+			String[] name = null;
 			try {
 				DataInputStream streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String inputLine;
 
 				while ((inputLine = streamIn.readUTF()) != null) {
 					if (inputLine.contains("newcom ")) {
-						String[] name = inputLine.split(" ");
+						name = inputLine.split(" ");
 						if (name.length > 1 && name[1] != null) {
-							System.out.println("hi " + name[1]);
 							ProgramInfo.connectedPilots[socket.getPort()] = name[1];
 							break;
 						}
@@ -100,7 +105,7 @@ public class Server implements Runnable {
 				e.printStackTrace();
 			}
 
-			System.out.println("Client accepted: " + socket);
+			System.out.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
 			clients[clientCount] = new ServerThread(this, socket);
 			try {
 				clients[clientCount].open();

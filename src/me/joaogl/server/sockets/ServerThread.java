@@ -1,4 +1,4 @@
-package me.joaogl.server;
+package me.joaogl.server.sockets;
 
 import java.net.*;
 import java.io.*;
@@ -33,7 +33,6 @@ public class ServerThread extends Thread {
 	}
 
 	public void run() {
-		System.out.println("Server Thread " + ID + " running.");
 		while (true) {
 			try {
 				server.handle(ID, streamIn.readUTF());
