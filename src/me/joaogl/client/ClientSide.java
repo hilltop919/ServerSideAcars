@@ -20,7 +20,7 @@ public class ClientSide {
 			out = new PrintWriter(Socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
 			stdIn = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Sockets open.");
+			System.out.println("Sockets ready.");
 		} catch (UnknownHostException e) {
 			forceClose();
 		} catch (IOException e) {

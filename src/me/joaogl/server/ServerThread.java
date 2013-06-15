@@ -8,6 +8,8 @@ import java.net.Socket;
 
 public class ServerThread extends Thread {
 	private Socket socket = null;
+	private PrintWriter socketToUser;
+	private BufferedReader socketFromUser;
 
 	public ServerThread(Socket socket) {
 		super("ServerThread");
@@ -18,8 +20,8 @@ public class ServerThread extends Thread {
 		try {
 			IncommingManager manager = new IncommingManager();
 
-			PrintWriter socketToUser = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader socketFromUser = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			socketToUser = new PrintWriter(socket.getOutputStream(), true);
+			socketFromUser = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 			String outputLine, inputLine;
 
@@ -35,9 +37,8 @@ public class ServerThread extends Thread {
 					break;
 				}
 			}
-			socketToUser.close();
-			socketFromUser.close();
-			socket.close();
+
+			closeSockets();
 		} catch (IOException e) {
 			Exception(e);
 		}
@@ -48,7 +49,13 @@ public class ServerThread extends Thread {
 		else e.printStackTrace();
 	}
 
-	private void disconnect() {
-
+	private void closeSockets() {
+		try {
+			socketToUser.close();
+			socketFromUser.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -16,30 +16,28 @@ public class IncommingManager {
 			if (stage == 1) {
 				if (check(in)) return cancel();
 				else {
-					if (in != null) {
-						if (isInt(in)) {
-							if (AircraftManager.getReg(Integer.parseInt(in)) != null) {
-								int id = AircraftManager.getId(AircraftManager.getReg(Integer.parseInt(in)));
-								stage = 2;
-								return "Thank you, aircraft requested is " + AircraftManager.getReg(id) + " registred with the id " + id + " which fuel available is " + AircraftManager.getFuel(id) + " and aircraft life is " + AircraftManager.getLife(id) + ".";
-							} else return "Type list to get all Planes registrations";
-						} else {
-							if (AircraftManager.getId(in) != DataManager.getErrorvalue()) {
-								int id = AircraftManager.getId(in);
-								stage = 2;
-								return "Thank you, aircraft requested is " + AircraftManager.getReg(id) + " registred with the id " + id + " which fuel available is " + AircraftManager.getFuel(id) + " and aircraft life is " + AircraftManager.getLife(id) + ".";
-							} else return "Type list to get all Planes registrations, " + AircraftManager.getId(in);
-						}
-					} else return "Type list to get all Planes registrations.";
+					if (isInt(in)) {
+						if (AircraftManager.getReg(Integer.parseInt(in)) != null) {
+							int id = AircraftManager.getId(AircraftManager.getReg(Integer.parseInt(in)));
+							stage = 2;
+							return "Thank you, aircraft requested is " + AircraftManager.getReg(id) + " registred with the id " + id + " which fuel available is " + AircraftManager.getFuel(id) + " and aircraft life is " + AircraftManager.getLife(id) + ".";
+						} else return "Type list to get all Planes registrations";
+					} else {
+						if (AircraftManager.getId(in) != DataManager.getErrorvalue()) {
+							int id = AircraftManager.getId(in);
+							stage = 2;
+							return "Thank you, aircraft requested is " + AircraftManager.getReg(id) + " registred with the id " + id + " which fuel available is " + AircraftManager.getFuel(id) + " and aircraft life is " + AircraftManager.getLife(id) + ".";
+						} else return "Type list to get all Planes registrations, " + AircraftManager.getId(in);
+					}
 				}
 			}
 			if (stage == 2) if (check(in)) return cancel();
 			if (in.equalsIgnoreCase("Disconnecting") || in.equalsIgnoreCase("disc")) return "disc";
 			if (in.equalsIgnoreCase("list")) {
 				String result = "Aircraft List sent to the server console.";
-				for (int i = 0; i < AircraftManager.aircraftReg.size(); i++) {
+				for (int i = 0; i < AircraftManager.aircraftReg.size(); i++)
 					System.out.println(AircraftManager.getAllPlanes(i));
-				}
+
 				return result;
 			}
 			if (in.contains("delid")) {
