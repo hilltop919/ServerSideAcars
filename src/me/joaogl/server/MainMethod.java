@@ -12,9 +12,9 @@ public class MainMethod {
 
 		try {
 			serverSocket = new ServerSocket(24467);
-			System.out.println(" - Server started on port 24467.");		
-			//Setup planes
-			System.out.println("Setting up the data planes.");		
+			System.out.println(" - Server started on port 24467.");
+			// Setup planes
+			System.out.println("Setting up the data planes.");
 			DataManager.setupRegList();
 		} catch (IOException e) {
 			System.err.println("Error:");

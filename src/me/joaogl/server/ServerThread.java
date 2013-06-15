@@ -7,62 +7,29 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ServerThread extends Thread {
-
 	private Socket socket = null;
-	private static boolean running = false;
-	private static PrintWriter socketToUser;
-	private BufferedReader socketFromUser;
-	private BufferedReader serverCommands;
 
 	public ServerThread(Socket socket) {
 		super("ServerThread");
 		this.socket = socket;
-		running = true;
 	}
 
 	public void run() {
 		try {
-			socketToUser = new PrintWriter(socket.getOutputStream(), true);
-			socketFromUser = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			serverCommands = new BufferedReader(new InputStreamReader(System.in));
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+			String inputLine, outputLine;
 			IncommingManager manager = new IncommingManager();
-			socketToUser.println("Connected, Welcome.");
-			System.out.println("New Client connected: " + socket.getInetAddress());
-
-			while (running) {
-				if (socket.isClosed()) {
-					System.out.println("close");
-					System.out.println("close");
-					System.out.println("close");
-					System.out.println("close");
-					System.out.println("close");
-					System.out.println("close");
-					close();
-				}
-				System.out.println("a");
-				// if (socketFromUser.readLine() != null)
-				// manager.processInput(socketFromUser.readLine());
-				System.out.println("a");
-				// if (serverCommands.readLine() != null)
-				// socketToUser.println(serverCommands.readLine());
-				System.out.println("a");
+			outputLine = manager.processInput("new");
+			out.println(outputLine);
+			while ((inputLine = in.readLine()) != null) {
+				outputLine = manager.processInput(inputLine);
+				out.println(outputLine);
+				if (outputLine.equals("Disconnected. Thank you for flying with us, see you soon.")) break;
 			}
-
-			closeSockets();
-		} catch (IOException e) {
-			Exception(e);
-		}
-	}
-
-	public static void close() {
-		running = false;
-	}
-
-	private void closeSockets() {
-		try {
-			socketToUser.close();
-			socketFromUser.close();
+			out.close();
+			in.close();
 			socket.close();
 		} catch (IOException e) {
 			Exception(e);
@@ -72,10 +39,5 @@ public class ServerThread extends Thread {
 	private void Exception(IOException e) {
 		if (e.toString().contains("Connection reset")) System.out.println("Connection Reset: " + socket.getInetAddress() + " - Client disconnected");
 		else e.printStackTrace();
-	}
-
-	public static void sendToClient(String toClient) {
-		socketToUser.println(toClient);
-		System.out.println(toClient);
 	}
 }

@@ -12,51 +12,45 @@ public class ClientSide {
 	private static BufferedReader fromUser = null;
 
 	public static void main(String[] args) throws IOException {
+
 		System.out.println("Connecting to the Aircaft Management Server...");
 
+		System.out.println("10%");
+
 		try {
-			Socket = new Socket("192.168.1.65", 24467);
+			System.out.println("15%");
+			Socket = new Socket("localhost", 24467);
 			out = new PrintWriter(Socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-			fromUser = new BufferedReader(new InputStreamReader(System.in));
-
-			running = true;
+			System.out.println("50%");
 		} catch (UnknownHostException e) {
-			forceClose();
+			System.err.println("Server not available.");
+			System.exit(1);
 		} catch (IOException e) {
-			forceClose();
+			System.err.println("Server not available.");
+			System.exit(1);
 		}
 
-		while (running) {
-			if (in.readLine().equals("disc")) close();
-			if (fromUser.readLine() != null) out.println(fromUser.readLine());
+		System.out.println("55%");
+		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+		String fromServer;
+		String fromUser;
+		System.out.println("90%");
+		System.out.println("100%  Done");
 
-			System.out.println("Server: " + in.readLine());
+		while ((fromServer = in.readLine()) != null) {
+			System.out.println("Server: " + fromServer);
+			if (fromServer.equals("Disconnected. Thank you for flying with us, see you soon.")) break;
+
+			fromUser = stdIn.readLine();
+			if (fromUser != null) {
+				out.println(fromUser);
+			}
 		}
 
-		closeSockets();
-	}
-
-	private static void close() {
-		System.out.println("Disconnecting...");
-		running = false;
-	}
-
-	private static void forceClose() {
-		System.err.println("Server not available.");
-		System.exit(1);
-	}
-
-	private static void closeSockets() {
-		try {
-			System.out.println("Program closing.");
-			out.close();
-			in.close();
-			fromUser.close();
-			Socket.close();
-			System.out.println("Program closed.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		out.close();
+		in.close();
+		stdIn.close();
+		Socket.close();
 	}
 }
