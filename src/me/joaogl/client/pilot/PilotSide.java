@@ -1,14 +1,14 @@
-package me.joaogl.client;
+package me.joaogl.client.pilot;
 
 import java.net.*;
 import java.io.*;
 
-public class ClientSide implements Runnable {
+public class PilotSide implements Runnable {
 	private Socket socket = null;
 	private Thread thread = null;
 	private DataInputStream console = null;
 	private DataOutputStream streamOut = null;
-	private ClientSideThread client = null;
+	private PilotSideThread client = null;
 	private static boolean running = false;
 
 	public static void main(String args[]) {
@@ -29,14 +29,14 @@ public class ClientSide implements Runnable {
 					if (input.length > 1 && input[1] != null) {
 						System.out.println("Connecting as " + input[1]);
 						running = false;
-						ClientSide client = new ClientSide(24467, input[1]);
+						PilotSide client = new PilotSide(24467, input[1]);
 					} else System.out.println("Type connect (pilot id) - to connect");
 				} else System.out.println("Type connect (pilot id) - to connect");
 			} else System.out.println("You are not connected");
 		}
 	}
 
-	public ClientSide(int serverPort, String name) {
+	public PilotSide(int serverPort, String name) {
 		System.out.println("Establishing connection. Please wait ...");
 		try {
 			socket = new Socket("localhost", serverPort);
@@ -75,7 +75,7 @@ public class ClientSide implements Runnable {
 		streamOut = new DataOutputStream(socket.getOutputStream());
 		streamOut.writeUTF("newcom " + name);
 		if (thread == null) {
-			client = new ClientSideThread(this, socket);
+			client = new PilotSideThread(this, socket);
 			thread = new Thread(this);
 			thread.start();
 		}

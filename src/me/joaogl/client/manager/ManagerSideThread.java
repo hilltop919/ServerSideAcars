@@ -1,14 +1,15 @@
-package me.joaogl.client;
+package me.joaogl.client.manager;
 
 import java.net.*;
 import java.io.*;
 
-public class ClientSideThread extends Thread {
+
+public class ManagerSideThread extends Thread {
 	private Socket socket = null;
-	private ClientSide client = null;
+	private ManagerSide client = null;
 	private DataInputStream streamIn = null;
 
-	public ClientSideThread(ClientSide _client, Socket _socket) {
+	public ManagerSideThread(ManagerSide _client, Socket _socket) {
 		client = _client;
 		socket = _socket;
 		open();
@@ -37,7 +38,7 @@ public class ClientSideThread extends Thread {
 			try {
 				client.handle(streamIn.readUTF());
 			} catch (IOException ioe) {
-				System.out.println("Server disconnected. Come back latter.");
+				System.out.println("Server went down.");
 				client.stop();
 			}
 		}
