@@ -46,7 +46,8 @@ public class PilotSide implements Runnable {
 			System.out.println("Host unknown: " + uhe.getMessage());
 			System.exit(1);
 		} catch (IOException ioe) {
-			System.out.println("Unexpected exception: " + ioe.getMessage());
+			if (ioe.getMessage().contains("Connection refused: ")) System.out.println("Server is not available.");
+			else System.out.println("Unexpected exception: " + ioe.getMessage());
 			System.exit(1);
 		}
 	}

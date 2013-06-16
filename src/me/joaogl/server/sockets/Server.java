@@ -44,8 +44,11 @@ public class Server implements Runnable {
 
 	public void stop() {
 		if (thread != null) {
-			thread.stop();
-			thread = null;
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -86,10 +89,10 @@ public class Server implements Runnable {
 			clientCount--;
 			try {
 				toTerminate.close();
+				toTerminate.stop();
 			} catch (IOException ioe) {
 				System.out.println("Error closing thread: " + ioe);
 			}
-			toTerminate.stop();
 		}
 	}
 
