@@ -33,4 +33,12 @@ public class ManagerDataEcrypter {
 		}
 		return (md.digest(bytesOfMessage).toString());
 	}
+
+	public static void decrypt(String message) {
+
+	}
+
+	public static void decryptpw(String pw) {
+
+	}
 }
