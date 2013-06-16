@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class ManagerDataEcrypter {
 
-	public static void ecrypt(String message) {
+	public static void encrypt(String message) {
 		byte[] bytes = message.getBytes();
 		StringBuilder binary = new StringBuilder();
 		for (byte b : bytes) {
@@ -20,7 +20,7 @@ public class ManagerDataEcrypter {
 		System.out.println("'" + message + "' to binary: " + binary);
 	}
 
-	public static String ecryptpw(String pw) {
+	public static String encryptpw(String pw) {
 		MessageDigest md = null;
 		byte[] bytesOfMessage = null;
 		try {
