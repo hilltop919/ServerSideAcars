@@ -1,10 +1,7 @@
 package me.joaogl.client.manager;
 
 import java.net.*;
-import java.util.Scanner;
 import java.io.*;
-
-import me.joaogl.client.pilot.PilotSide;
 
 public class ManagerSide implements Runnable {
 	private Socket socket = null;
@@ -27,7 +24,6 @@ public class ManagerSide implements Runnable {
 
 		System.out.println("Type connect username - to connect");
 		while (running) {
-
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			String fromUser = null;
 			try {
@@ -39,6 +35,7 @@ public class ManagerSide implements Runnable {
 				if (fromUser.contains(" ")) {
 					input = fromUser.split(" ");
 					if (input.length > 1 && input[1] != null) {
+						ManagerDataEcrypter.ecrypt(input[1]);
 						stage = 1;
 					} else System.out.println("Type connect username - to connect");
 				} else System.out.println("Type connect username - to connect");
@@ -57,7 +54,7 @@ public class ManagerSide implements Runnable {
 					} else System.out.println("Incorrect password.");
 				}
 				System.out.println("Connecting as administrator " + input[1]);
-				ManagerSide manager = new ManagerSide(24467, input[1], password.toString());
+				ManagerSide manager = new ManagerSide(24467, input[1], pw);
 				running = false;
 			}
 		}
@@ -68,7 +65,7 @@ public class ManagerSide implements Runnable {
 		try {
 			socket = new Socket("localhost", serverPort);
 			System.out.println("Connected to the Aircraft Management Server - Rio Sul Virtual - Manager port.");
-			start(name);
+			start(name, password);
 		} catch (UnknownHostException uhe) {
 			System.out.println("Host unknown: " + uhe.getMessage());
 			System.exit(1);
@@ -98,10 +95,10 @@ public class ManagerSide implements Runnable {
 		} else System.out.println(msg);
 	}
 
-	public void start(String name) throws IOException {
+	public void start(String name, String password) throws IOException {
 		console = new DataInputStream(System.in);
 		streamOut = new DataOutputStream(socket.getOutputStream());
-		streamOut.writeUTF("newmancom " + name);
+		streamOut.writeUTF("newmancom " + name + " " + password);
 		if (thread == null) {
 			client = new ManagerSideThread(this, socket);
 			thread = new Thread(this);
