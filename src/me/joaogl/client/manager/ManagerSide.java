@@ -3,7 +3,6 @@ package me.joaogl.client.manager;
 import java.net.*;
 import java.io.*;
 
-
 public class ManagerSide implements Runnable {
 	private Socket socket = null;
 	private Thread thread = null;
@@ -74,7 +73,7 @@ public class ManagerSide implements Runnable {
 	public void start(String name) throws IOException {
 		console = new DataInputStream(System.in);
 		streamOut = new DataOutputStream(socket.getOutputStream());
-		streamOut.writeUTF("newcom " + name);
+		streamOut.writeUTF("newmancom " + name);
 		if (thread == null) {
 			client = new ManagerSideThread(this, socket);
 			thread = new Thread(this);

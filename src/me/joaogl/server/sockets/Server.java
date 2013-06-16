@@ -59,15 +59,28 @@ public class Server implements Runnable {
 		if (input.equals("disc")) {
 			clients[findClient(ID)].send("disc");
 			remove(ID);
-		} else for (int i = 0; i < clientCount; i++)
-			clients[i].send(ProgramInfo.connectedPilots[ID] + ": " + input);
+		} else {
+			if (ProgramInfo.connectedPilots[ID] != null) clients[findClient(ID)].send(ProgramInfo.connectedPilots[ID] + ": " + input);
+			else clients[findClient(ID)].send(ProgramInfo.connectedManagers[ID] + ": " + input);
+		}
+	}
+
+	public synchronized void handleForAll(int ID, String input) {
+		if (input.equals("disc")) {
+			clients[findClient(ID)].send("disc");
+			remove(ID);
+		} else for (int i = 0; i < clientCount; i++) {
+			if (ProgramInfo.connectedPilots[ID] != null) clients[i].send(ProgramInfo.connectedPilots[ID] + ": " + input);
+			else clients[i].send(ProgramInfo.connectedManagers[ID] + ": " + input);
+		}
 	}
 
 	public synchronized void remove(int ID) {
 		int pos = findClient(ID);
 		if (pos >= 0) {
 			ServerThread toTerminate = clients[pos];
-			System.out.println("Removing client thread " + ID + " at " + pos);
+			if (ProgramInfo.connectedPilots[ID] != null) System.out.println("Removing client " + ProgramInfo.connectedPilots[ID] + ".");
+			else System.out.println("Removing Manager " + ProgramInfo.connectedManagers[ID] + ".");
 			if (pos < clientCount - 1) for (int i = pos + 1; i < clientCount; i++)
 				clients[i - 1] = clients[i];
 			clientCount--;
@@ -76,11 +89,7 @@ public class Server implements Runnable {
 			} catch (IOException ioe) {
 				System.out.println("Error closing thread: " + ioe);
 			}
-			try {
-				if (toTerminate.isAlive()) toTerminate.stop();
-			} catch (final ThreadDeath ex) {
-				ex.getStackTrace();
-			}
+			toTerminate.stop();
 		}
 	}
 
@@ -92,20 +101,21 @@ public class Server implements Runnable {
 				String inputLine;
 
 				while ((inputLine = streamIn.readUTF()) != null) {
-					if (inputLine.contains("newcom ")) {
+					if (inputLine.contains("newcom ") || inputLine.contains("newmancom ")) {
 						name = inputLine.split(" ");
 						if (name.length > 1 && name[1] != null) {
-							ProgramInfo.connectedPilots[socket.getPort()] = name[1];
+							if (inputLine.contains("newcom ")) ProgramInfo.connectedPilots[socket.getPort()] = name[1];
+							else if (inputLine.contains("newmancom ")) ProgramInfo.connectedManagers[socket.getPort()] = name[1];
 							break;
 						}
 					}
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			System.out.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
+			if (ProgramInfo.connectedPilots[socket.getPort()] == name[1]) System.out.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
+			else System.out.println("Manager " + socket.getInetAddress() + " as connected with the name " + name[1]);
 			clients[clientCount] = new ServerThread(this, socket);
 			try {
 				clients[clientCount].open();
