@@ -19,8 +19,9 @@ public class ServerThread extends Thread {
 		socket = _socket;
 		pw = _pw;
 		ID = socket.getPort();
-		if (!DataManager.getPilot(pw, pw))
-		; // CLOSE
+		if (!DataManager.getPilot(pw, pw)) {
+			// CLOSE CLIENT CONNECTION
+		}
 	}
 
 	public void send(String msg) {
