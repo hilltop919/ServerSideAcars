@@ -13,14 +13,16 @@ public class ServerThread extends Thread {
 	private DataInputStream streamIn = null;
 	private DataOutputStream streamOut = null;
 
-	public ServerThread(Server _server, Socket _socket, String _pw) {
+	public ServerThread(Server _server, Socket _socket, String _pw, String _id) throws IOException {
 		super();
 		server = _server;
 		socket = _socket;
 		pw = _pw;
 		ID = socket.getPort();
-		if (!DataManager.getPilot(pw, pw)) {
-			// CLOSE CLIENT CONNECTION
+		if (!DataManager.getPilot(_id, pw)) {
+			close();
+			server.remove(ID);
+			stop();
 		}
 	}
 

@@ -30,8 +30,8 @@ public class DataManager {
 		// SQL SET VAR = CONTENT WHERE where = VAR
 	}
 
-	public static boolean getPilot(String pw, String id) {
+	public static boolean getPilot(String id, String pw) {
 		// get DATA
-		return false;
+		return true;
 	}
 }

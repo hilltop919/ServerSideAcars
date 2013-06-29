@@ -129,7 +129,11 @@ public class Server implements Runnable {
 			if (accepted) {
 				if (ProgramInfo.connectedPilots[socket.getPort()] == name[1]) System.out.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
 				else System.out.println("Manager " + socket.getInetAddress() + " as connected with the name " + name[1]);
-				clients[clientCount] = new ServerThread(this, socket, name[2]);
+				try {
+					clients[clientCount] = new ServerThread(this, socket, name[2], name[1]);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				try {
 					clients[clientCount].open();
 					clients[clientCount].start();
