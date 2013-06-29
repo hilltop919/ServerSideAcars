@@ -2,13 +2,12 @@ package me.joaogl.server.data;
 
 import me.joaogl.server.aircraftmanager.AircraftManager;
 
-
 public class DataManager {
 
 	public static int getTotalAircraft() {
 		return 4;
-	}	
-	
+	}
+
 	public static int getErrorvalue() {
 		return (getTotalAircraft() + 1);
 	}
@@ -33,6 +32,6 @@ public class DataManager {
 
 	public static boolean getPilot(String pw, String id) {
 		// get DATA
-		return true;
+		return false;
 	}
 }

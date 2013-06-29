@@ -7,10 +7,10 @@ import me.joaogl.server.data.DataManager;
 import me.joaogl.server.data.ProgramInfo;
 
 public class Server implements Runnable {
-	private ServerThread clients[] = new ServerThread[50];
+	private static ServerThread clients[] = new ServerThread[50];
 	private ServerSocket server = null;
 	private Thread thread = null;
-	private int clientCount = 0;
+	private static int clientCount = 0;
 
 	public Server(int port) {
 		try {
@@ -52,7 +52,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	private int findClient(int ID) {
+	private static int findClient(int ID) {
 		for (int i = 0; i < clientCount; i++)
 			if (clients[i].getID() == ID) return i;
 		return -1;
@@ -78,7 +78,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	public synchronized void remove(int ID) {
+	public static synchronized void remove(int ID) {
 		int pos = findClient(ID);
 		if (pos >= 0) {
 			ServerThread toTerminate = clients[pos];
@@ -129,7 +129,7 @@ public class Server implements Runnable {
 			if (accepted) {
 				if (ProgramInfo.connectedPilots[socket.getPort()] == name[1]) System.out.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
 				else System.out.println("Manager " + socket.getInetAddress() + " as connected with the name " + name[1]);
-				clients[clientCount] = new ServerThread(this, socket);
+				clients[clientCount] = new ServerThread(this, socket, name[2]);
 				try {
 					clients[clientCount].open();
 					clients[clientCount].start();

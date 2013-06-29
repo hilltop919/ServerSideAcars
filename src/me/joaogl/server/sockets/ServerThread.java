@@ -3,18 +3,24 @@ package me.joaogl.server.sockets;
 import java.net.*;
 import java.io.*;
 
+import me.joaogl.server.data.DataManager;
+
 public class ServerThread extends Thread {
 	private Server server = null;
 	private Socket socket = null;
+	private String pw = null;
 	private int ID = -1;
 	private DataInputStream streamIn = null;
 	private DataOutputStream streamOut = null;
 
-	public ServerThread(Server _server, Socket _socket) {
+	public ServerThread(Server _server, Socket _socket, String _pw) {
 		super();
 		server = _server;
 		socket = _socket;
+		pw = _pw;
 		ID = socket.getPort();
+		if (!DataManager.getPilot(pw, pw))
+		; // CLOSE
 	}
 
 	public void send(String msg) {
@@ -59,4 +65,5 @@ public class ServerThread extends Thread {
 		if (streamIn != null) streamIn.close();
 		if (streamOut != null) streamOut.close();
 	}
+
 }
