@@ -30,4 +30,9 @@ public class DataManager {
 	public static void setIntoDB(String where, String var, String content) {
 		// SQL SET VAR = CONTENT WHERE where = VAR
 	}
+
+	public static boolean getPilot(String pw, String id) {
+		// get DATA
+		return true;
+	}
 }

@@ -63,7 +63,7 @@ public class ManagerSide implements Runnable {
 	public ManagerSide(int serverPort, String name, String password) {
 		System.out.println("Establishing connection. Please wait ...");
 		try {
-			socket = new Socket("localhost", serverPort);
+			socket = new Socket("93.108.216.124", serverPort);
 			System.out.println("Connected to the Aircraft Management Server - Rio Sul Virtual - Manager port.");
 			start(name, password);
 		} catch (UnknownHostException uhe) {

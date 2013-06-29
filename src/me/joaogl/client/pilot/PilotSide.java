@@ -3,6 +3,8 @@ package me.joaogl.client.pilot;
 import java.net.*;
 import java.io.*;
 
+import me.joaogl.client.manager.ManagerSide;
+
 public class PilotSide implements Runnable {
 	private Socket socket = null;
 	private Thread thread = null;
@@ -13,8 +15,17 @@ public class PilotSide implements Runnable {
 
 	public static void main(String args[]) {
 		running = true;
+		int stage = 0;
+		String[] input = null;
+		Console c = System.console();
+		if (c == null) {
+			System.err.println("No console.");
+			System.exit(1);
+		}
+		String pw = null;
 
 		System.out.println("Type connect (pilot id) - to connect");
+
 		while (running) {
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			String fromUser = null;
@@ -23,16 +34,32 @@ public class PilotSide implements Runnable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if (fromUser != null && fromUser.contains("connect")) {
+			if (fromUser != null && fromUser.contains("connect") && stage == 0) {
 				if (fromUser.contains(" ")) {
-					String[] input = fromUser.split(" ");
+					input = fromUser.split(" ");
 					if (input.length > 1 && input[1] != null) {
-						System.out.println("Connecting as " + input[1]);
-						running = false;
-						PilotSide client = new PilotSide(24467, input[1]);
-					} else System.out.println("Type connect (pilot id) - to connect");
-				} else System.out.println("Type connect (pilot id) - to connect");
+						System.out.println(input[1]);
+						stage = 1;
+					} else System.out.println("Type connect username - to connect");
+				} else System.out.println("Type connect username - to connect");
 			} else System.out.println("You are not connected");
+			if (stage == 1) {
+				char[] password = null;
+				boolean right = false;
+				while (!right) {
+					password = c.readPassword("Enter your password: ");
+					if (password.length >= 6) {
+						pw = Character.toString(password[0]);
+						for (int i = 1; i < password.length; i++)
+							pw += Character.toString(password[i]);
+						if (pw.contains(" ")) System.out.println("Incorrect password.");
+						else right = true;
+					} else System.out.println("Incorrect password.");
+				}
+				System.out.println("Connecting as RSL" + input[1]);
+				ManagerSide manager = new ManagerSide(24467, input[1], pw);
+				running = false;
+			}
 		}
 	}
 
