@@ -35,7 +35,7 @@ public class ManagerSide implements Runnable {
 				if (fromUser.contains(" ")) {
 					input = fromUser.split(" ");
 					if (input.length > 1 && input[1] != null) {
-						ManagerDataEcrypter.encrypt(input[1]);
+						System.out.println(input[1]);
 						stage = 1;
 					} else System.out.println("Type connect username - to connect");
 				} else System.out.println("Type connect username - to connect");
