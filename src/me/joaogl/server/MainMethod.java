@@ -17,11 +17,17 @@
 
 package me.joaogl.server;
 
+import me.joaogl.server.data.ServerLogger;
 import me.joaogl.server.sockets.Server;
 
 public class MainMethod {
 
 	public static void main(String[] args) {
+		ServerLogger.println("");
+		ServerLogger.println("");
+		ServerLogger.println("========== Starting Aircraft Mnagement Server ==========");
+		ServerLogger.println("by Joao Lourenco to Rui Sul Virtual");
+		ServerLogger.println("========== Setting up Aircraft Mnagement Server ==========");
 		Server server = new Server(24467);
 	}
 }

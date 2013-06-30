@@ -52,11 +52,18 @@ public class DataManager {
 
 		// BEBUG PURPOSES
 		if (id.equalsIgnoreCase("tony")) {
-			if (pw.equals("tufiste")) return true;
+			if (pw.equals("tufiste")) {
+				ServerLogger.println("Logged in successfully.");
+				return true;
+			}
 		}
 		if (id.equalsIgnoreCase("joaogl")) {
-			if (pw.equals("joaogl")) return true;
+			if (pw.equals("joaogl")) {
+				ServerLogger.println("Logged in successfully.");
+				return true;
+			}
 		}
+		ServerLogger.println("Login error for " + id);
 		return false;
 	}
 }
