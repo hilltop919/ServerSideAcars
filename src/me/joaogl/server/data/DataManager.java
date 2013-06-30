@@ -49,6 +49,15 @@ public class DataManager {
 
 	public static boolean getPilot(String id, String pw) {
 		// get DATA
-		return true;
+
+		// BEBUG PURPOSES
+		if (id.equalsIgnoreCase("tony")) {
+			if (pw.equals("tufiste")) return true;
+		}
+
+		if (id.equalsIgnoreCase("joaogl")) {
+			if (pw.equals("joaogl")) return true;
+		}
+		return false;
 	}
 }

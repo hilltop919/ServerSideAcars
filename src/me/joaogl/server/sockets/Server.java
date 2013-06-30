@@ -148,15 +148,11 @@ public class Server implements Runnable {
 				else System.out.println("Manager " + socket.getInetAddress() + " as connected with the name " + name[1]);
 				try {
 					clients[clientCount] = new ServerThread(this, socket, name[2], name[1]);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				try {
 					clients[clientCount].open();
 					clients[clientCount].start();
 					clientCount++;
-				} catch (IOException ioe) {
-					System.out.println("Error opening thread: " + ioe);
+				} catch (IOException e) {
+					System.out.println("Error opening thread: " + e);
 				}
 			}
 			accepted = false;
