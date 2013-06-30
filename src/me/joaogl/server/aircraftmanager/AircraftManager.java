@@ -20,6 +20,7 @@ package me.joaogl.server.aircraftmanager;
 import java.util.ArrayList;
 
 import me.joaogl.server.data.DataManager;
+import me.joaogl.server.data.ServerLogger;
 
 public class AircraftManager {
 
@@ -29,14 +30,14 @@ public class AircraftManager {
 	private static int deleted = 0;
 
 	public static void setId(int id, String reg, int life, int fuel) {
-		System.out.println(" - Setting aircraft " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
+		ServerLogger.println(" - Setting aircraft " + reg + " with the id " + id + ". Aircraft status, condition " + life + " fuel available " + fuel + ".");
 		aircraftReg.add(reg);
 		aircraftLife.add(life);
 		aircraftFuel.add(fuel);
 	}
 
 	public static void removeId(int id) {
-		System.out.println("Removing id " + id);
+		ServerLogger.println("Removing id " + id);
 		aircraftReg.remove(id);
 		aircraftLife.remove(id);
 		aircraftFuel.remove(id);
@@ -44,7 +45,7 @@ public class AircraftManager {
 	}
 
 	public static void removeAll() {
-		System.out.println("Removing all aircraft data.");
+		ServerLogger.println("Removing all aircraft data.");
 		aircraftReg.removeAll(aircraftReg);
 		aircraftFuel.removeAll(aircraftFuel);
 		aircraftLife.removeAll(aircraftLife);

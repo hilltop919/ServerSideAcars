@@ -20,24 +20,27 @@ package me.joaogl.server.sockets;
 import java.net.*;
 import java.io.*;
 
+import me.joaogl.server.IncommingHandler;
 import me.joaogl.server.data.DataManager;
 import me.joaogl.server.data.ProgramInfo;
+import me.joaogl.server.data.ServerLogger;
 
 public class Server implements Runnable {
 	private static ServerThread clients[] = new ServerThread[50];
 	private ServerSocket server = null;
 	private Thread thread = null;
 	private static int clientCount = 0;
+	private IncommingHandler inhandler = new IncommingHandler();
 
 	public Server(int port) {
 		try {
-			System.out.println("Binding to port " + port + ", please wait  ...");
+			ServerLogger.println("Binding to port " + port + ", please wait  ...");
 			server = new ServerSocket(port);
-			System.out.println("Server started: " + server.getInetAddress());
+			ServerLogger.println("Server started: " + server.getInetAddress());
 			start();
 			DataManager.setupRegList();
 		} catch (IOException ioe) {
-			System.out.println("Can not bind to port " + port + ": " + ioe.getMessage());
+			ServerLogger.println("Can not bind to port " + port + ": " + ioe.getMessage());
 		}
 	}
 
@@ -46,7 +49,7 @@ public class Server implements Runnable {
 			try {
 				addThread(server.accept());
 			} catch (IOException ioe) {
-				System.out.println("Server accept error: " + ioe);
+				ServerLogger.println("Server accept error: " + ioe);
 				stop();
 			}
 		}
@@ -80,6 +83,7 @@ public class Server implements Runnable {
 			clients[findClient(ID)].send("disc");
 			remove(ID);
 		} else {
+			inhandler.processInput(input, ID);
 			if (ProgramInfo.connectedPilots[ID] != null) clients[findClient(ID)].send(ProgramInfo.connectedPilots[ID] + ": " + input);
 			else clients[findClient(ID)].send(ProgramInfo.connectedManagers[ID] + ": " + input);
 		}
@@ -99,8 +103,8 @@ public class Server implements Runnable {
 		int pos = findClient(ID);
 		if (pos >= 0) {
 			ServerThread toTerminate = clients[pos];
-			if (ProgramInfo.connectedPilots[ID] != null) System.out.println("Removing client " + ProgramInfo.connectedPilots[ID] + ".");
-			else System.out.println("Removing Manager " + ProgramInfo.connectedManagers[ID] + ".");
+			if (ProgramInfo.connectedPilots[ID] != null) ServerLogger.println("Removing client " + ProgramInfo.connectedPilots[ID] + ".");
+			else ServerLogger.println("Removing Manager " + ProgramInfo.connectedManagers[ID] + ".");
 			if (pos < clientCount - 1) for (int i = pos + 1; i < clientCount; i++)
 				clients[i - 1] = clients[i];
 			clientCount--;
@@ -108,7 +112,7 @@ public class Server implements Runnable {
 				toTerminate.close();
 				toTerminate.stop();
 			} catch (IOException ioe) {
-				System.out.println("Error closing thread: " + ioe);
+				ServerLogger.println("Error closing thread: " + ioe);
 			}
 		}
 	}
@@ -132,31 +136,31 @@ public class Server implements Runnable {
 								break;
 							}
 						} else {
-							System.out.println("Hacked client trying to join: " + socket.getInetAddress());
+							ServerLogger.println("Hacked client trying to join: " + socket.getInetAddress());
 							if (socket != null) socket.close();
 							if (streamIn != null) streamIn.close();
 						}
 					}
 				}
 			} catch (IOException e) {
-				if (e.getMessage().contains("Stream closed")) System.out.println("Hacked client connection ended.");
+				if (e.getMessage().contains("Stream closed")) ServerLogger.println("Hacked client connection ended.");
 				else e.printStackTrace();
 			}
 
 			if (accepted) {
-				if (ProgramInfo.connectedPilots[socket.getPort()] == name[1]) System.out.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
-				else System.out.println("Manager " + socket.getInetAddress() + " as connected with the name " + name[1]);
+				if (ProgramInfo.connectedPilots[socket.getPort()] == name[1]) ServerLogger.println("Client " + socket.getInetAddress() + " as connected with the PilotID " + name[1]);
+				else ServerLogger.println("Manager " + socket.getInetAddress() + " as connected with the name " + name[1]);
 				try {
 					clients[clientCount] = new ServerThread(this, socket, name[2], name[1]);
 					clients[clientCount].open();
 					clients[clientCount].start();
 					clientCount++;
 				} catch (IOException e) {
-					System.out.println("Error opening thread: " + e);
+					ServerLogger.println("Error opening thread: " + e);
 				}
 			}
 			accepted = false;
-		} else System.out.println("Client refused: maximum " + clients.length + " reached.");
+		} else ServerLogger.println("Client refused: maximum " + clients.length + " reached.");
 	}
 
 }

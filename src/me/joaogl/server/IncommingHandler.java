@@ -19,11 +19,12 @@ package me.joaogl.server;
 
 import me.joaogl.server.aircraftmanager.AircraftManager;
 import me.joaogl.server.data.DataManager;
+import me.joaogl.server.data.ServerLogger;
 
 public class IncommingHandler {
 	int stage = 0;
 
-	public String processInput(String in) {
+	public String processInput(String in, int ID) {
 		String out = "Empty command";
 		if (in != null) {
 			out = "Unknown command - " + in;
@@ -54,7 +55,7 @@ public class IncommingHandler {
 			if (in.equalsIgnoreCase("list")) {
 				String result = "Aircraft List sent to the server console.";
 				for (int i = 0; i < AircraftManager.aircraftReg.size(); i++)
-					System.out.println(AircraftManager.getAllPlanes(i));
+					ServerLogger.println(AircraftManager.getAllPlanes(i));
 
 				return result;
 			}

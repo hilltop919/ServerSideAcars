@@ -30,7 +30,7 @@ public class DataManager {
 	}
 
 	public static void setupRegList() {
-		System.out.println("Setting up the aircraft list.");
+		ServerLogger.println("Setting up the aircraft list.");
 		AircraftManager.removeAll();
 		for (int i = 0; i < DataManager.getTotalAircraft(); i++) {
 			// SQL DATA INTO THE ARRAY
@@ -40,7 +40,7 @@ public class DataManager {
 			if (i == 2) AircraftManager.setId(i, "C", 60, 20);
 			if (i == 3) AircraftManager.setId(i, "D", 100, 30);
 		}
-		System.out.println("Done setting up the data planes, server up and ready.");
+		ServerLogger.println("Done setting up the data planes, server up and ready.");
 	}
 
 	public static void setIntoDB(String where, String var, String content) {
@@ -54,7 +54,6 @@ public class DataManager {
 		if (id.equalsIgnoreCase("tony")) {
 			if (pw.equals("tufiste")) return true;
 		}
-
 		if (id.equalsIgnoreCase("joaogl")) {
 			if (pw.equals("joaogl")) return true;
 		}

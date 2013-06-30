@@ -21,6 +21,7 @@ import java.net.*;
 import java.io.*;
 
 import me.joaogl.server.data.DataManager;
+import me.joaogl.server.data.ServerLogger;
 
 public class ServerThread extends Thread {
 	private Server server = null;
@@ -45,10 +46,11 @@ public class ServerThread extends Thread {
 
 	public void send(String msg) {
 		try {
+			ServerLogger.println(msg);
 			streamOut.writeUTF(msg);
 			streamOut.flush();
 		} catch (IOException ioe) {
-			System.out.println(ID + " ERROR sending: " + ioe.getMessage());
+			ServerLogger.println(ID + " ERROR sending: " + ioe.getMessage());
 			server.remove(ID);
 			stop();
 		}
@@ -63,7 +65,7 @@ public class ServerThread extends Thread {
 			try {
 				server.handle(ID, streamIn.readUTF());
 			} catch (IOException ioe) {
-				System.out.println(ID + " ERROR reading: " + ioe.getMessage());
+				ServerLogger.println(ID + " ERROR reading: " + ioe.getMessage());
 				server.remove(ID);
 				try {
 					close();
