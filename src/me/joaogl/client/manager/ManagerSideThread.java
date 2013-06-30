@@ -15,12 +15,10 @@
     along with ServerSideAcars.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package me.joaogl.client.manager;
 
 import java.net.*;
 import java.io.*;
-
 
 public class ManagerSideThread extends Thread {
 	private Socket socket = null;

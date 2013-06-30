@@ -15,7 +15,6 @@
     along with ServerSideAcars.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package me.joaogl.server.sockets;
 
 import java.net.*;

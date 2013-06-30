@@ -15,7 +15,6 @@
     along with ServerSideAcars.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package me.joaogl.server.data;
 
 import me.joaogl.server.aircraftmanager.AircraftManager;
